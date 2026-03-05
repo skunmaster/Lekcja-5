@@ -92,6 +92,17 @@ class ApartmentSettlement(BaseModel):
     total_due_pln: float
 
 
+class TenantSettlement(BaseModel):
+    tenant: str
+    apartment_settlement: str
+    month: int
+    year: int
+    rent_pln: float
+    bills_pln: float
+    total_due_pln: float
+    balance_pln: float
+
+
 class Manager:
     def __init__(self, parameters: Parameters):
         self.parameters = parameters 
