@@ -1,5 +1,4 @@
-
-
+import pytest
 from src.manager import Manager
 from src.models import Parameters
 from src.models import Bill
@@ -51,9 +50,6 @@ def test_apartment_costs_with_optional_parameters():
 
     costs = manager.get_apartment_costs('apart-polanka')
     assert costs == 3532.0
-import pytest
-from src.manager import Manager
-from src.models import Parameters
 
 def test_get_apartment_costs_no_such_apartment():
     params = Parameters()
@@ -75,3 +71,39 @@ def test_get_apartment_costs_sum_for_month():
 
     cost = manager.get_apartment_costs("apart-polanka", 2025, 1)
     assert cost == 910
+
+def test_get_apartment_costs_without_month():
+    manager = Manager(Parameters())
+
+    manager.bills.append(Bill(
+        apartment='apart-polanka',
+        date_due='2025-03-15',
+        settlement_year=2025,
+        settlement_month=2,
+        amount_pln=1250.0,
+        type='rent'
+    ))
+
+    manager.bills.append(Bill(
+        apartment='apart-polanka',
+        date_due='2024-03-15',
+        settlement_year=2024,
+        settlement_month=2,
+        amount_pln=1150.0,
+        type='rent'
+    ))
+
+    manager.bills.append(Bill(
+        apartment='apart-polanka',
+        date_due='2024-02-02',
+        settlement_year=2024,
+        settlement_month=1,
+        amount_pln=222.0,
+        type='electricity'
+    ))
+
+    total_2024 = manager.get_apartment_costs('apart-polanka', 2024, 0)  
+    assert total_2024 == 1372.0  
+
+    total_all = manager.get_apartment_costs('apart-polanka', 0, 0)  
+    assert total_all == 3532.0  

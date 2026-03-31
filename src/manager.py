@@ -24,15 +24,15 @@ class Manager:
                 return False
         return True
     
-    def get_apartment_costs(self, apartment_key: str, year: int, month: int) -> float | None:
+    def get_apartment_costs(self, apartment_key: str, year = None , month = None ) -> float | None:
         if apartment_key not in self.apartments:
             return None
 
         filtered_bills = [
             bill for bill in self.bills
             if bill.apartment == apartment_key
-            and bill.settlement_year == year
-            and bill.settlement_month == month
+            and (year == 0 or bill.settlement_year == year or year is None)
+        and (month == 0 or bill.settlement_month == month or month is None)
         ]
 
         if not filtered_bills:
@@ -40,3 +40,4 @@ class Manager:
 
         total = sum(bill.amount_pln for bill in filtered_bills)
         return float(total)
+    
